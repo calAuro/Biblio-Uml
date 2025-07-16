@@ -1,0 +1,81 @@
+@startuml BibliotecaAuth
+!theme aws-orange
+title "Sistema Biblioteca - Autenticazione e Ruoli"
+
+' Gerarchia utenti con generalizzazione
+actor "Utente Sistema" as BASE
+actor "Studente" as ST
+actor "Bibliotecario" as BIB
+actor "DSGA" as DSGA
+actor "Docente" as DOC
+
+' Relazioni di ereditarietà (tutti sono utenti)
+BASE <|-- ST
+BASE <|-- BIB
+BASE <|-- DSGA
+BASE <|-- DOC
+
+' Autenticazione comune
+usecase "Login Unico" as LOGIN
+usecase "Logout" as LOGOUT
+
+BASE --> LOGIN
+BASE --> LOGOUT
+
+' Use cases per ruolo specifico
+package "Funzioni Studente" {
+  usecase "Cercare Libro" as UC_SEARCH
+  usecase "Prenotare Libro" as UC_BOOK
+}
+
+package "Funzioni Bibliotecario" {
+  usecase "Scan QR Libro" as UC_SCAN
+  usecase "Gestire Prestiti" as UC_MANAGE
+  usecase "Proporre Acquisti\na DSGA" as UC_PROPOSE
+}
+
+package "Funzioni DSGA" {
+  usecase "Report Budget" as UC_BUDGET
+  usecase "Approvare Acquisti" as UC_APPROVE
+}
+package "Funzioni Docente" {
+  usecase "Valutare Libri\nper Dismissione" as UC_EVAL
+  usecase "Suggerire Nuovi\nAcquisti" as UC_SUGGEST
+}
+
+' Connessioni specifiche per ruolo
+ST --> UC_SEARCH
+ST --> UC_BOOK
+BIB --> UC_SCAN
+BIB --> UC_MANAGE
+DSGA --> UC_BUDGET
+DSGA --> UC_APPROVE
+DOC --> UC_EVAL
+DOC --> UC_SUGGEST
+BIB --> UC_PROPOSE
+
+' Relazioni tra use cases (flusso logico)
+UC_SUGGEST .> UC_PROPOSE : feed into
+UC_PROPOSE .> UC_APPROVE : enable
+
+note right of LOGIN : Un solo login,\ndashboard diversa\nper ogni ruolo
+@enduml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
