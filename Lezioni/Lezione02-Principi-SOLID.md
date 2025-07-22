@@ -25,3 +25,22 @@ Esempio: Sistema tariffe biblioteca
 - Strategie di ricerca libri
 - Calcolatori tariffe utenti
 - Gestori notifiche diverse
+## ✅ Principio D - Dependency Inversion
+**Problema**: Classi importanti dipendono da dettagli tecnici
+**Soluzione**: Dipendere da interfacce, non da implementazioni concrete
+
+### Esempio Biblioteca
+```java
+// Interface
+interface DatabaseLibri {
+    void salvaLibro(Libro libro);
+}
+
+// Implementazioni
+class MySQLDatabase implements DatabaseLibri { ... }
+class SQLiteDatabase implements DatabaseLibri { ... }
+
+// Classe principale usa interface
+class GestoreLibri {
+    private DatabaseLibri database; // Flessibile!
+}
