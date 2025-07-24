@@ -1,0 +1,17 @@
+@startuml BibliotecaRelazioni
+title "Sistema Biblioteca - Relazioni tra Use Cases"
+
+usecase "Login" as LOGIN #lightcyan
+usecase "Prenotare Libro" as BOOK #lightblue
+usecase "Cercare Libro" as SEARCH #lightblue
+usecase "Filtrare Anno" as FILTER #lightgreen
+usecase "Ordinare Risultati" as SORT #lightgreen
+
+' Solo le relazioni - chiare e separate
+BOOK .> LOGIN : <<include>>
+FILTER .> SEARCH : <<extends>>  
+SORT .> SEARCH : <<extends>>
+
+note right of BOOK : INCLUDE: Sempre obbligatorio
+note right of FILTER : EXTEND: Solo se vuole filtrare
+@enduml

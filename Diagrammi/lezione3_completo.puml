@@ -1,0 +1,63 @@
+@startuml BibliotecaCompleto
+title "Sistema Biblioteca Smart - Gerarchia Corretta"
+
+' Gerarchia con ereditarietà
+actor "Utente Sistema" as BASE #lightgray
+actor "Studente" as ST #lightblue
+actor "Bibliotecario" as BIB #lightgreen  
+actor "DSGA" as DSGA #red
+actor "Docente" as DOC #lightpink
+
+' Tutti ereditano da Utente Sistema
+BASE <|-- ST 
+BASE <|-- BIB
+BASE <|-- DSGA
+BASE <|-- DOC
+
+' Package compatti
+package "🔐 Auth" {
+  usecase "Login" as LOGIN
+}
+
+package "📚 Studenti" {
+  usecase "Cerca" as SEARCH
+  usecase "Prenota" as BOOK
+}
+
+package "🤖 Robot" {
+  usecase "Scan QR" as SCAN
+  usecase "Decidi Acquisti" as DECIDE  
+}
+
+package "💰 Budget" {
+  usecase "Approva" as APPROVE
+}
+
+package "🎓 Docenti" {
+  usecase "Suggerisci" as SUGGEST
+}
+
+' Connessioni CORRETTE
+BASE --> LOGIN         
+ST --> SEARCH
+ST --> BOOK
+BIB --> SCAN
+BIB --> DECIDE
+DSGA --> APPROVE
+DOC --> SUGGEST
+
+' Relazioni logiche
+BOOK -[#red]-> LOGIN : include
+SCAN -[#red]-> LOGIN : include
+DECIDE -[#red]-> LOGIN : include
+APPROVE -[#red]-> LOGIN : include
+SUGGEST -[#red]-> LOGIN : include
+
+SUGGEST -[#orange]-> DECIDE : feed into
+DECIDE -[#green]-> APPROVE : enable
+
+legend bottom
+🔴 INCLUDE = obbligatorio | 🟠 FEED INTO = arricchisce | 🟢 ENABLE = prerequisito
+end legend
+
+@enduml

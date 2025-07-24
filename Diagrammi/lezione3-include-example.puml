@@ -1,0 +1,16 @@
+@startuml IncludeExample
+actor Studente as S
+
+package "Prenotazione Libro" {
+  usecase "Prenotare Libro" as UC1
+  usecase "Autenticarsi" as UC2
+  usecase "Verificare Disponibilità" as UC3
+}
+
+S --> UC1
+
+UC1 .> UC2 : include
+UC1 .> UC3 : include
+
+note right of UC1 : Per prenotare un libro\nDEVI sempre autenticarti\nDEVI sempre verificare disponibilità
+@enduml

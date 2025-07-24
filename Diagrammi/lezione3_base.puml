@@ -1,0 +1,96 @@
+@startuml BibliotecaCompleto
+title "Sistema Biblioteca Smart - Use Cases Completi"
+
+' Attori colorati
+actor "Utente Sistema" as BASE #lightgray
+actor "Studente" as ST #blue
+actor "Bibliotecario" as BIB #lightgreen  
+actor "DSGA" as DSGA #Red
+actor "Docente" as DOC #lightpink
+
+' Gerarchia
+BASE <|-- ST 
+BASE <|-- BIB
+BASE <|-- DSGA
+BASE <|-- DOC
+
+' Package semplici senza colori forzati
+package "🔐 Autenticazione" {
+  usecase "Login Sistema" as LOGIN
+  usecase "Logout" as LOGOUT
+}
+
+package "📚 Servizi Studenti" {
+  usecase "Cercare Libro" as SEARCH
+  usecase "Prenotare Libro" as BOOK
+}
+
+package "🤖 Bibliotecario + Robot" {
+  usecase "Scan QR Libro" as SCAN_QR
+  usecase "Gestire Prestiti" as MANAGE_LOANS
+}
+package "💰 Amministrazione DSGA" {
+  usecase "Approvare Budget" as APPROVE_BUDGET
+  usecase "Report Finanziari" as FINANCIAL_REPORT
+  usecase "Decidere Acquisti" as DECIDE_BUY
+}
+
+package "🎓 Funzioni Docente" {
+  usecase "Suggerire Libri" as SUGGEST_BOOKS
+  usecase "Valutare Dismissioni" as EVALUATE_BOOKS
+}
+
+' Connessioni
+BASE --> LOGIN
+ST --> SEARCH
+ST --> BOOK
+BIB --> SCAN_QR
+BIB --> MANAGE_LOANS
+
+DSGA --> APPROVE_BUDGET
+DSGA --> FINANCIAL_REPORT  
+DSGA --> DECIDE_BUY
+
+DOC --> SUGGEST_BOOKS
+DOC --> EVALUATE_BOOKS
+
+' RELAZIONI TRA USE CASES
+
+' INCLUDE - sempre obbligatorio
+BOOK .> LOGIN : include
+SCAN_QR .> LOGIN : include
+APPROVE_BUDGET .> LOGIN : include
+skinparam arrow {
+  Color red
+}
+' ENABLE - prerequisito (VERDE)
+skinparam arrow {
+  Color green  
+} 
+SUGGEST_BOOKS .> DECIDE_BUY : enable
+DECIDE_BUY .> APPROVE_BUDGET : enable
+
+' EXTEND - opzionale (BLU)
+skinparam arrow {
+  Color blue
+}
+usecase "Filtrare per Anno" as FILTER_YEAR
+usecase "Ordinare Risultati" as SORT_RESULTS
+
+FILTER_YEAR .> SEARCH : extends
+SORT_RESULTS .> SEARCH : extends
+
+ST --> FILTER_YEAR
+ST --> SORT_RESULTS
+
+' FEED INTO - arricchisce (ARANCIONE)
+skinparam arrow {
+  Color orange
+}
+SUGGEST_BOOKS .> DECIDE_BUY : feed into
+FINANCIAL_REPORT .> APPROVE_BUDGET : feed into
+
+note right of BOOK : Include: DEVE fare login
+note right of SUGGEST_BOOKS : Enable: Prima suggerisci,\npoi DSGA decide
+note right of FILTER_YEAR : Extend: OPZIONALE\nsolo se vuole filtrare
+@enduml
